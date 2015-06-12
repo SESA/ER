@@ -1,0 +1,14 @@
+doctype html
+html
+	head
+		title= title
+		link(rel='stylesheet' href='/dropzone/dropzone.css')
+		script(src='dropzone/dropzone.js')
+	body
+		script.
+			Dropzone.options.zone1 = {
+				uploadMultiple: true,
+				parallelUploads: 10,
+				acceptedFiles: '.nii.gz, .nii' 
+			};		
+		form#zone1(action = 'file-upload', class = 'dropzone')

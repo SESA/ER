@@ -1,0 +1,6 @@
+[submodule "ext/slicedrop"]
+	path = ext/slicedrop
+	url = git@github.com:slicedrop/slicedrop.github.com.git
+[submodule "ext/dropzone"]
+	path = ext/dropzone
+	url = git@github.com:enyo/dropzone.git
