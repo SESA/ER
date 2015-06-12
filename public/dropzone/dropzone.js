@@ -1,0 +1,1 @@
+../../ext/dropzone/dist/dropzone.js
