@@ -3,6 +3,10 @@ GIT=git
 
 .PHONY: clean all
 
+init: 
+	${GIT} submodule add git@github.com:slicedrop/slicedrop.github.com.git ext/slicedrop
+	${GIT} submodule add git@github.com:enyo/dropzone.git ext/dropzone
+
 all: ext/dropzone ext/slicedrop node_modules
 
 ext/dropzone: .gitmodules
@@ -18,6 +22,10 @@ node_modules: package.json
 
 run: all
 	${NPM} start
+
+rm_sub_path:
+	${GIT} rm --cached ext/dropzone
+	${GIT} rm --cached ext/slicedrop
 
 clean:
 	-${RM} -rf node_modules ext uploads
