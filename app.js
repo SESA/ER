@@ -8,11 +8,11 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var multer = require('multer');
 var jQuery = require('jquery');
+var shelljs = require('shelljs');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
@@ -24,6 +24,11 @@ app.use(multer({
 	dest: './uploads/',
 	rename: function (fieldname, filename) {
     return filename
+  },
+  putSingleFilesInArray: true,
+  onParseEnd: function (req, next) {
+    console.log('2');
+    req.next();
   }
 }));
 app.use(cookieParser());

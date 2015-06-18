@@ -1,7 +1,7 @@
 doctype html
 html
 	head
-		title= title
+		title=title
 		link(rel='stylesheet' href='/dropzone/dropzone.css')
 		script(src='dropzone/dropzone.js')
 	body
@@ -9,6 +9,29 @@ html
 			Dropzone.options.zone1 = {
 				uploadMultiple: true,
 				parallelUploads: 10,
-				acceptedFiles: '.nii.gz, .nii' 
-			};		
+				acceptedFiles: '.nii.gz, .nii',
+				success: function (file) {console.log('1');},
+				init: function () {
+					this.on("queuecomplete", function (file) {
+						console.log('queuecomplete');
+					});
+
+					this.on("successmultiple", function(files) {
+						console.log('successmultiple');
+					});
+					this.on("success", function(files) {
+						console.log('success');
+					});
+					this.on("complete", function(files) {
+						console.log('complete');
+					});
+					this.on("completemultiple", function(files) {
+						console.log('completemultiple');
+					});
+					this.on("addedfile", function(files) {
+						console.log('addedfile');
+					});
+				}
+			};
+
 		form#zone1(action = 'file-upload', class = 'dropzone')
