@@ -15,7 +15,8 @@
     "serve-favicon": "~2.2.0",
     "multer": "*",
     "jquery": "*",
-    "shelljs": "~0.5.1",
-    "fs": "*"
+    "fs": "*",
+    "tmp": "*",
+    "socket.io": "*"
   }
 }

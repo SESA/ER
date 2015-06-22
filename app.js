@@ -9,7 +9,6 @@ var users = require('./routes/users');
 var multer = require('multer');
 var jQuery = require('jquery');
 var shelljs = require('shelljs');
-
 var app = express();
 
 // view engine setup
@@ -36,7 +35,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -68,6 +66,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
