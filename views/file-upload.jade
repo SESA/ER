@@ -4,13 +4,17 @@ html
 		title=title
 		link(rel='stylesheet' href='/dropzone/dropzone.css')
 		script(src='dropzone/dropzone.js')
+		script(type='text/javascript')
 	body
 		script.
+			function myParamName(){
+			return "slice";
+			};
 			Dropzone.options.zone1 = {
 				uploadMultiple: true,
 				parallelUploads: 100,
 				acceptedFiles: '.nii.gz, .nii',
-				success: function (file) {console.log('SUCCESS CALLBACK');},
+				paramName: myParamName,
 				init: function () {
 					var trans = null;
 					this.on("queuecomplete", function () {
@@ -40,7 +44,7 @@ html
 					//this.on("addedfile", function(files) {
 					//	console.log('addedfile');
 					//});
-				}
+				}	
 			};
 
 		form#zone1(action = 'file-upload', class = 'dropzone')

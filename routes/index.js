@@ -6,14 +6,28 @@ var path = require('path');
 var tmp = require('tmp');
 var url = require('url');
 
+function reconPrefix(req){
+    return 'http://' + req.get('host') + '/recon/';
+}
 function startProcessing(req, res)
 {
-    console.log('startProcessing');
+    console.log('startProcessing: req: ' + req.get('host') +
+		'host: ' + req.hostname + 
+		' port: ' + req.app.settings.port +
+		' url: ' + req.url);
 
     var dir = tmp.dirSync({ template: './transactions/XXXXXX' });
+    var files = null;
+    var urlprefix=reconPrefix(req);
+    
     console.log("Dir: ", dir.name);
- 
-    var work = spawn('./recon.sh', [dir.name]);
+    req.files.slice.forEach(function (element, index, array) {
+	if (files == null) files = element.path;
+	else files = files + ' ' + element.path;
+    });
+    console.log("files: ", files);
+    
+    var work = spawn('./recon.sh', [dir.name, urlprefix, files]);
 
     work.on('error', function (er) {
 	console.log("error" + er);
@@ -43,14 +57,32 @@ function status(req, res, next)
 {
     var trans = path.basename(url.parse(req.url).pathname);
     console.log('status: ' + trans);
-//    res.redirect('/');
-    res.writeHead(200, {"Content-Type": "text/plain"});
+    //    res.redirect('/');
+    var urlprefix=reconPrefix(req);
+
+    var body = '<html>'+
+	'<head>'+
+	'<meta http-equiv="Content-Type" '+
+	'content="text/html; charset=UTF-8" />'+
+	'</head>'+
+	'<body onload="timer=setTimeout(function(){ window.location=\'/sliceDrop/?' + urlprefix + trans + '.nii\';}, 6000)">' +
+	'<pre>' +
+	'OUTPUT OF RECONSTRUCTION PROCESSING:'	;
+
+    res.writeHead(200, {"Content-Type": "text/html"});
+    res.write(body);
+    
     var work=fs.createReadStream("./transactions/" + trans + '/status');
-    work.on('close', function(code) {
-	console.log("TRANSACTION DONE: $trans ");
-	res.end("ALL DONE");
+    work.on('data', function(chunk){
+	console.log("TRANSACTION DATA: " + trans );
+	res.write(chunk.toString());
     });
-    work.pipe(res);
+    
+    work.on('end', function() {
+	console.log("TRANSACTION DONE: " + trans );
+	res.write('YOU WILL BE REDIRETED TO RECONSTRUCTION IN 6 seconds...');
+	res.end('</pre></body></html>');
+    });
 }
 
 /* GET home page. */

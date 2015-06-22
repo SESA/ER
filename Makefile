@@ -28,4 +28,4 @@ rm_sub_path:
 	${GIT} rm --cached ext/slicedrop
 
 clean:
-	-${RM} -rf node_modules uploads
+	-${RM} -rf node_modules uploads public/recon/* transactions/*
