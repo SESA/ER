@@ -27,5 +27,8 @@ rm_sub_path:
 	${GIT} rm --cached ext/dropzone
 	${GIT} rm --cached ext/slicedrop
 
+reset:
+	${RM} -rf uploads/* transactions/* public/recon/* 
+
 clean:
 	-${RM} -rf node_modules uploads public/recon/* transactions/*

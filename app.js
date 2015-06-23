@@ -1,22 +1,20 @@
 var express = require('express');
+var app = module.exports = express();
 var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var multer = require('multer');
 var jQuery = require('jquery');
-var shelljs = require('shelljs');
-var app = express();
+var debug = require('debug')('FetalMRI:server');
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+app.myIO = io;
 
 // view engine setup
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ 
@@ -26,11 +24,10 @@ app.use(multer({
   },
   putSingleFilesInArray: true,
   onParseEnd: function (req, next) {
-    console.log('2');
     req.next();
   }
 }));
-app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
@@ -43,7 +40,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handlers
+// --- error handlers
 
 // development error handler
 // will print stacktrace
@@ -66,5 +63,104 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+// -----
+
+
+// io.on('connection', function(socket){
+//   console.log('a user connected');
+//   socket.on('disconnect', function(){
+//     console.log('user disconnected');
+//   });
+// });
+
+
+
+// Event fired every time a new client connects:
+io.on('connection', function(socket) {
+    console.info('New client connected (id=' + socket.id + ').');
+    // When socket disconnects, remove it from the list:
+    socket.on('disconnect', function() {
+        console.info('Client gone (id=' + socket.id + ').');
+    });
+});
+
+
+
+// ---- enough setup lets get going
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+     console.log('listening on *:3000');
+}
+
 
 module.exports = app;
+
+http.listen(port);
+http.on('error', onError);
+http.on('listening', onListening);
+

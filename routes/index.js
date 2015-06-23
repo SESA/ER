@@ -5,10 +5,13 @@ var spawn = require('child_process').spawn;
 var path = require('path');
 var tmp = require('tmp');
 var url = require('url');
+var util = require('util');
+
 
 function reconPrefix(req){
     return 'http://' + req.get('host') + '/recon/';
 }
+
 function startProcessing(req, res)
 {
     console.log('startProcessing: req: ' + req.get('host') +
@@ -57,37 +60,29 @@ function status(req, res, next)
 {
     var trans = path.basename(url.parse(req.url).pathname);
     console.log('status: ' + trans);
-    //    res.redirect('/');
     var urlprefix=reconPrefix(req);
 
-    var body = '<html>'+
-	'<head>'+
-	'<meta http-equiv="Content-Type" '+
-	'content="text/html; charset=UTF-8" />'+
-	'</head>'+
-	'<body onload="timer=setTimeout(function(){ window.location=\'/sliceDrop/?' + urlprefix + trans + '.nii\';}, 6000)">' +
-	'<pre>' +
-	'OUTPUT OF RECONSTRUCTION PROCESSING:'	;
+    var io = req.app.myIO;
 
-    res.writeHead(200, {"Content-Type": "text/html"});
-    res.write(body);
+    console.log('io: ' + io);
     
     var work=fs.createReadStream("./transactions/" + trans + '/status');
     work.on('data', function(chunk){
-	console.log("TRANSACTION DATA: " + trans );
-	res.write(chunk.toString());
+	var data = chunk.toString();
+	console.log("TRANSACTION DATA: " + trans + ' : ' + data);
+	io.emit('log', data);
     });
     
     work.on('end', function() {
+	var url = '/sliceDrop/?' + urlprefix + trans + '.nii';
 	console.log("TRANSACTION DONE: " + trans );
-	res.write('YOU WILL BE REDIRETED TO RECONSTRUCTION IN 6 seconds...');
-	res.end('</pre></body></html>');
+	io.emit('ctl', url);
     });
 }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.render('index', { title: 'Express' });
+    	res.render('file-upload', { title: 'Elastic Reconstruction' });
 });
 
 router.get('/sliceDrop', function(req, res, next) {
@@ -103,17 +98,17 @@ router.get('/users', function(req, res, next) {
 });
 
 router.get('/file-upload', function(req, res, next) {
-	res.render('file-upload', { title: 'Dropzone' });
+	res.render('file-upload', { title: 'Elastic Reconstruction' });
 });
 
 router.post('/file-upload', function(req, res, next) {
     console.log(req.files);
     startProcessing(req, res);
-//    res.redirect('foo');
 });
 
 
 router.get(/status/, function(req, res, next) {
+    res.render('status', { title: 'Elastic Reconstruction Status' });
     status(req, res, next);
 });
 	   

@@ -39,5 +39,5 @@ echo "RECON: END: $(date)"
 echo "RECON: output url"
 
 cp data/defaultrecon.nii public/recon/$tran.nii
-echo http://localhost:3000/sliceDrop/$url$tran.nii
+echo "http://localhost:3000/sliceDrop?$url$tran.nii"
 ) > $STATUSFILE
