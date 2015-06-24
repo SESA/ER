@@ -66,26 +66,6 @@ app.use(function(err, req, res, next) {
 // -----
 
 
-// io.on('connection', function(socket){
-//   console.log('a user connected');
-//   socket.on('disconnect', function(){
-//     console.log('user disconnected');
-//   });
-// });
-
-
-
-// Event fired every time a new client connects:
-io.on('connection', function(socket) {
-    console.info('New client connected (id=' + socket.id + ').');
-    // When socket disconnects, remove it from the list:
-    socket.on('disconnect', function() {
-        console.info('Client gone (id=' + socket.id + ').');
-    });
-});
-
-
-
 // ---- enough setup lets get going
 
 /**

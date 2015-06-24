@@ -7,6 +7,7 @@ var tmp = require('tmp');
 var url = require('url');
 var util = require('util');
 
+var transactions = {};
 
 function reconPrefix(req){
     return 'http://' + req.get('host') + '/recon/';
@@ -20,64 +21,66 @@ function startProcessing(req, res)
 		' url: ' + req.url);
 
     var dir = tmp.dirSync({ template: './transactions/XXXXXX' });
+    var tranid = path.basename(dir.name);
+    var ts = { id: tranid, path: dir };
     var files = null;
-    var urlprefix=reconPrefix(req);
+    var urlprefix = reconPrefix(req);
     
     console.log("Dir: ", dir.name);
     req.files.slice.forEach(function (element, index, array) {
 	if (files == null) files = element.path;
 	else files = files + ' ' + element.path;
     });
+    ts.files = files;
     console.log("files: ", files);
-    
-    var work = spawn('./recon.sh', [dir.name, urlprefix, files]);
 
-    work.on('error', function (er) {
-	console.log("error" + er);
+    ts.data = '';
+
+    ts.ioNSP = req.app.myIO.of('/' + tranid);
+    console.log('created: ts.ioNSP /' + tranid + ':' + ts.ioNSP);
+    ts.ioNSP.on('connection', function (socket) {
+	console.log('ioNSP: ' + tranid +': Connection');
+	ts.ioNSP.emit('log', ts.data);
+	socket.on('disconnect', function() {
+        console.info('ioNSP: '+ tranid + ': Disconnect Client gone (id=' + socket.id + ').');
+	});	
     });
     
-    work.stderr.setEncoding('utf8');
-    work.stdout.setEncoding('utf8');
+    transactions[tranid] = ts;
+    
+    ts.work = spawn('./recon.sh', [dir.name, urlprefix, files]);
 
-    work.stdout.on('data', function (data) {
+    ts.work.on('error', function (er) {
+	delete transactions[tranid];
+	console.log("error" + er);
+    });
+
+    
+    ts.work.stderr.setEncoding('utf8');
+    ts.work.stdout.setEncoding('utf8');
+
+    ts.work.stdout.on('data', function (data) {
+        ts.data = ts.data + data;
+	ts.ioNSP.emit('log', data);
 	data=data.trim();
 	console.log('stdout: ' + data);
     });
     
-    work.stderr.on('data', function (data) {
+    ts.work.stderr.on('data', function (data) {
+	ts.data = ts.data + data;
+	ts.ioNSP.emit('log', data);
 	data= data.trim();
 	console.log('stderr: ' + data);
     });
     
-    work.on('close', function (code) {
+    ts.work.on('close', function (code) {
+	console.log("TRANSACTION DONE: " + tranid );
+	ts.ioNSP.emit('ctl', '/sliceDrop/?' + urlprefix + tranid + '.nii');
+	delete transactions[tranid];
 	console.log('work closed/exited with code ' + code);
     });
 
-    res.send(path.basename(dir.name));
-}
-
-function status(req, res, next)
-{
-    var trans = path.basename(url.parse(req.url).pathname);
-    console.log('status: ' + trans);
-    var urlprefix=reconPrefix(req);
-
-    var io = req.app.myIO;
-
-    console.log('io: ' + io);
-    
-    var work=fs.createReadStream("./transactions/" + trans + '/status');
-    work.on('data', function(chunk){
-	var data = chunk.toString();
-	console.log("TRANSACTION DATA: " + trans + ' : ' + data);
-	io.emit('log', data);
-    });
-    
-    work.on('end', function() {
-	var url = '/sliceDrop/?' + urlprefix + trans + '.nii';
-	console.log("TRANSACTION DONE: " + trans );
-	io.emit('ctl', url);
-    });
+    res.send(tranid);
 }
 
 /* GET home page. */
@@ -108,8 +111,14 @@ router.post('/file-upload', function(req, res, next) {
 
 
 router.get(/status/, function(req, res, next) {
-    res.render('status', { title: 'Elastic Reconstruction Status' });
-    status(req, res, next);
+    var tranid = path.basename(url.parse(req.url).pathname);
+    if (tranid in transactions) {
+	res.render('status', { title: 'Elastic Reconstruction Status', id: tranid, port: req.app.settings.port });
+    } else {
+	res.writeHead(404, {"Content-Type": "text/html"});
+	res.write("404 Not found");
+	res.end();
+    }
 });
 	   
 module.exports = router;

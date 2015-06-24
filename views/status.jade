@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Elastic Reconstruction Transaction Status
+    title= title 
     |     
     style.
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -11,12 +11,13 @@ html
       #messages li:nth-child(odd) { background: #eee; }
   |   
   body
+    h1 #{title} for #{id}
     ul#messages
     |     
     script(src='/socket.io/socket.io.js')
     script(src='http://code.jquery.com/jquery-1.11.1.js')
     script.
-      var socket = io();
+      var socket = io(':#{port}/#{id}');
       socket.on('log', function(msg){
       $('#messages').append($('<li>').text(msg));
       });
