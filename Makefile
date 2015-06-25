@@ -1,21 +1,28 @@
 NPM=npm
 GIT=git
 
-.PHONY: clean all
+.PHONY: clean all irtk-build
 
-init: 
-	${GIT} submodule add git@github.com:slicedrop/slicedrop.github.com.git ext/slicedrop
-	${GIT} submodule add git@github.com:enyo/dropzone.git ext/dropzone
 
-all: ext/dropzone ext/slicedrop node_modules
+all: ext/anaconda ext/fetalReconstruction/source/bin/reconstruction_GPU2 node_modules 
 
-ext/dropzone: .gitmodules
-	${GIT} submodule init
-	${GIT} submodule update
+ext/Anaconda-2.1.0-Linux-x86_64.sh:
+	cd ext && wget http://09c8d0b2229f813c1b93-c95ac804525aac4b6dba79b00b39d1d3.r79.cf1.rackcdn.com/Anaconda-2.1.0-Linux-x86_64.sh
 
-ext/slicedrop: .gitmodules
-	${GIT} submodule init
-	${GIT} submodule update
+irtk-build: ext/anaconda ext/IRTK/build/bin/reconstructionMasking
+
+ext/IRTK/build/bin/reconstructionMasking:
+	-mkdir ext/IRTK/build
+	cd ext/IRTK/build && cmake -DPNG_LIBRARY:FILEPATH=../anaconda/lib/libpng.so -DPNG_PNG_INCLUDE_DIR:DIRPATH=../anaconda/include -D BUILD_WITH_PNG=ON -D WRAP_CYTHON=ON ..
+	make -C ext/IRTK/build  -j 8
+
+ext/anaconda: ext/Anaconda-2.1.0-Linux-x86_64.sh
+	cd ext && bash ./Anaconda-2.1.0-Linux-x86_64.sh -b -p $$PWD/anaconda
+
+ext/fetalReconstruction/source/bin/reconstruction_GPU2:
+	mkdir ext/fetalReconstruction/source/build
+	cd ext/fetalReconstruction/source/build && cmake -DCMAKE_C_COMPILER=gcc-4.8 -DCMAKE_CXX_COMPILER=g++-4.8 -DBUILD_TESTS=OFF ..
+	make -C ext/fetalReconstruction/source/build -j8 
 
 node_modules: package.json
 	${NPM} install
