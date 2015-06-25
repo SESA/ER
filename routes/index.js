@@ -40,10 +40,19 @@ function startProcessing(req, res)
     console.log('created: ts.ioNSP /' + tranid + ':' + ts.ioNSP);
     ts.ioNSP.on('connection', function (socket) {
 	console.log('ioNSP: ' + tranid +': Connection');
-	ts.ioNSP.emit('log', ts.data);
-	socket.on('disconnect', function() {
-        console.info('ioNSP: '+ tranid + ': Disconnect Client gone (id=' + socket.id + ').');
-	});	
+	if (tranid in transactions) {
+	    ts.ioNSP.emit('log', ts.data);
+	    socket.on('disconnect', function() {
+		console.info('ioNSP: '+ tranid + ': Disconnect Client gone (id=' + socket.id + ').');
+	    });
+	} else {
+	    // race condition handling... status page rendered but transaction terminated and deleted before socket.io
+	    // request -- there is still a bug here as the ts object has been deleted... but since
+	    // I have no clue about how js memory allocation works I will assume I am ok
+	    // till we see the failure ;-)
+	    console.log('ioNSP: ' + tranid + ': ERROR');
+	    ts.ioNSP.emit('ctl', '/sliceDrop/?' + urlprefix + tranid + '.nii');
+	}
     });
     
     transactions[tranid] = ts;
