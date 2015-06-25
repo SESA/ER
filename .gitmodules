@@ -4,3 +4,15 @@
 [submodule "ext/slicedrop"]
 	path = ext/slicedrop
 	url = git@github.com:slicedrop/slicedrop.github.com.git
+[submodule "ext/example-motion-correction"]
+	path = ext/example-motion-correction
+	url = git@github.com:SESA/example-motion-correction
+	branch = autoMask
+[submodule "ext/fetalReconstruction"]
+	path = ext/fetalReconstruction
+	url = git@github.com:SESA/fetalReconstruction
+	branch = cpu
+[submodule "ext/IRTK"]
+	path = ext/IRTK
+	url = git@github.com:SESA/IRTK.git
+	branch = sesa
