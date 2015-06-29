@@ -12,7 +12,3 @@
 	path = ext/fetalReconstruction
 	url = git@github.com:SESA/fetalReconstruction
 	branch = cpu
-[submodule "ext/IRTK"]
-	path = ext/IRTK
-	url = git@github.com:SESA/IRTK.git
-	branch = sesa
