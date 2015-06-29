@@ -29,6 +29,7 @@ export PATH="$IRTK_DIR/bin:$PATH"
 export PYTHONPATH=$IRTK_DIR/build/lib:$PYTHONPATH
 # added by Anaconda 2.1.0 installer
 export PATH="$PWD/ext/anaconda/bin:$PATH"
+export CURDIRR=$PWD
 
 function setupDirectory()
 {
