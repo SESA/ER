@@ -11,11 +11,14 @@ ext/Anaconda-2.1.0-Linux-x86_64.sh:
 irtk-build: ext/anaconda ext/IRTK/build/bin/reconstructionMasking
 
 ext/IRTK/build/bin/reconstructionMasking:
-	-mkdir ext/IRTK/build
-	cd ext/IRTK/build && cmake -DPNG_LIBRARY:FILEPATH=$(CURDIR)/ext/anaconda/lib/libpng.so -DPNG_PNG_INCLUDE_DIR:DIRPATH=$(CURDIR)/ER/ext/anaconda/include -D BUILD_WITH_PNG=ON -D WRAP_CYTHON=ON -DBUILD_TESTS=OFF ..
-	make -C ext/IRTK/build  -j 8
-	cd $(CURDIR)/ext/IRTK/wrapping/cython/ext && make
-	export PYTHONPATH=$(CURDIR)/ext/IRTK/build/lib
+	-mkdir ext/sesa-irtk/build
+	cd ext/sesa-irtk/build && cmake -DPNG_LIBRARY:FILEPATH=$(CURDIR)/ext/anaconda/lib/libpng.so -DPNG_PNG_INCLUDE_DIR:DIRPATH=$(CURDIR)/ER/ext/anaconda/include -D BUILD_WITH_PNG=ON -D WRAP_CYTHON=ON -DBUILD_TESTS=OFF ..
+	make -C ext/sesa-itrk/build  -j 8
+	make -C ext/sesa-irtk/wrapping/cython/ext
+	export PYTHONPATH=$(CURDIR)/ext/sesa-irtk/build/lib
+	echo 'y' | conda install opencv
+	echo 'y' | conda install numpy=1.8
+	easy_install joblib
 
 ext/anaconda: ext/Anaconda-2.1.0-Linux-x86_64.sh
 	cd ext && bash ./Anaconda-2.1.0-Linux-x86_64.sh -b -p $$PWD/anaconda
