@@ -24,7 +24,7 @@ export RECON_REPODIR=${RECON_REPODIR:-$PWD/ext/fetalReconstruction}
 export MASKCMD=${MASKING_REPODIR}/run.sh
 export RECONCMD=${RECON_REPODIR}/source/bin/reconstruction_GPU2
 #### help
-export IRTK_DIR=$PWD/ext/sesa-irtk
+export IRTK_DIR=$PWD/ext/IRTK
 export PATH="$IRTK_DIR/bin:$PATH"
 export PYTHONPATH=$IRTK_DIR/build/lib:$PYTHONPATH
 # added by Anaconda 2.1.0 installer
