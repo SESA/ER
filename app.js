@@ -134,7 +134,7 @@ function onError(error) {
  */
 
 function onListening() {
-     console.log('listening on *:3000');
+     console.log('listening on *:' + port);
 }
 
 
