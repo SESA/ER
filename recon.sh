@@ -77,14 +77,14 @@ function doRecon()
 	$RECONCMD -o $tran.nii -i output_segmentation/masked_* --disableBiasCorrection --useAutoTemplate --useSINCPSF --resolution 2.0 --debug 0 --numThreads 32 --useCPU
     )
     echo "RECON: END: $(date)"
-    echo "RECON: output url"
+    echo "RECON: output $url"
 }
 
 function finish()
 {
     cp $dir/$tran.nii public/recon/$tran.nii
     #cp defaultrecon.nii public/recon/$tran.nii
-    echo "http://localhost:3000/sliceDrop?$url$tran.nii"
+    echo "slicedrop?$url$tran.nii"
 }
 
 echo "$0 $@ : STARTED: $(date)"

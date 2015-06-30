@@ -18,7 +18,7 @@ ext/IRTK/build/bin/reconstructionMasking:
 	export PYTHONPATH=$(CURDIR)/ext/sesa-irtk/build/lib
 
 ext/anaconda: ext/Anaconda-2.1.0-Linux-x86_64.sh
-#	cd ext && bash ./Anaconda-2.1.0-Linux-x86_64.sh -b -p $$PWD/anaconda
+	cd ext && bash ./Anaconda-2.1.0-Linux-x86_64.sh -b -p $$PWD/anaconda
 	export PATH=$(CURDIR)/ext/anaconda/bin:$$PATH && echo 'y' | conda install opencv && echo 'y' | conda install numpy=1.8
 	sudo easy_install joblib
 
@@ -32,7 +32,7 @@ node_modules: package.json
 	${NPM} install
 
 run: all
-	mkdir transactions
+	-mkdir transactions
 	${NPM} start
 
 rm_sub_path:

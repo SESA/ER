@@ -51,7 +51,7 @@ function startProcessing(req, res)
 	    // I have no clue about how js memory allocation works I will assume I am ok
 	    // till we see the failure ;-)
 	    console.log('ioNSP: ' + tranid + ': ERROR');
-	    ts.ioNSP.emit('ctl', '/sliceDrop/?' + urlprefix + tranid + '.nii');
+	    ts.ioNSP.emit('ctl', '/slicedrop/?' + urlprefix + tranid + '.nii');
 	}
     });
     
@@ -84,7 +84,7 @@ function startProcessing(req, res)
     
     ts.work.on('close', function (code) {
 	console.log("TRANSACTION DONE: " + tranid );
-	ts.ioNSP.emit('ctl', '/sliceDrop/?' + urlprefix + tranid + '.nii');
+	ts.ioNSP.emit('ctl', '/slicedrop/?' + urlprefix + tranid + '.nii');
 	delete transactions[tranid];
 	console.log('work closed/exited with code ' + code);
     });
@@ -95,12 +95,6 @@ function startProcessing(req, res)
 /* GET home page. */
 router.get('/', function(req, res, next) {
     	res.render('file-upload', { title: 'Elastic Reconstruction' });
-});
-
-router.get('/sliceDrop', function(req, res, next) {
-	var view = fs.open('./uploads/10_3T_nody_001.nii.gz' , r, callback);
-	console.log(view);
-	res.render('slicedrop', {view: view});
 });
 
 router.get('/users', function(req, res, next) {
