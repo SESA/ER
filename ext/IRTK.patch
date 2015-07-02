@@ -1,25 +1,91 @@
-diff -rupN IRTK.orig/config/IRTKInclude.cmake IRTK/config/IRTKInclude.cmake
---- IRTK.orig/config/IRTKInclude.cmake	2015-07-02 09:56:19.752188756 -0400
-+++ IRTK/config/IRTKInclude.cmake	2015-07-02 09:57:45.756245701 -0400
-@@ -52,12 +52,6 @@ ENDIF (ZLIB_FOUND)
+diff -rupN IRTK/config/IRTKInclude.cmake IRTK.new/config/IRTKInclude.cmake
+--- IRTK/config/IRTKInclude.cmake	2014-07-29 08:26:30.000000000 -0400
++++ IRTK.new/config/IRTKInclude.cmake	2015-07-02 12:01:00.195425471 -0400
+@@ -52,12 +52,12 @@ ENDIF (ZLIB_FOUND)
  
  INCLUDE(${CMAKE_ROOT}/Modules/FindPNG.cmake)
  
 -FIND_PACKAGE(FLTK REQUIRED)
--
++#FIND_PACKAGE(FLTK REQUIRED)
+ 
 -IF (FLTK_FOUND)
 -  INCLUDE_DIRECTORIES(${FLTK_INCLUDE_DIR})
 -  LINK_LIBRARIES (${FLTK_LIBRARIES})
 -ENDIF (FLTK_FOUND)
++#IF (FLTK_FOUND)
++#  INCLUDE_DIRECTORIES(${FLTK_INCLUDE_DIR})
++#  LINK_LIBRARIES (${FLTK_LIBRARIES})
++#ENDIF (FLTK_FOUND)
  
  IF (APPLE)
    FIND_PROGRAM(APPLE_REZ Rez /Developer/Tools)
-diff -rupN IRTK.orig/packages/CMakeLists.txt IRTK/packages/CMakeLists.txt
---- IRTK.orig/packages/CMakeLists.txt	2015-07-02 09:56:19.608193969 -0400
-+++ IRTK/packages/CMakeLists.txt	2015-07-02 09:57:01.062692990 -0400
+diff -rupN IRTK/packages/CMakeLists.txt IRTK.new/packages/CMakeLists.txt
+--- IRTK/packages/CMakeLists.txt	2014-07-29 08:26:30.000000000 -0400
++++ IRTK.new/packages/CMakeLists.txt	2015-07-02 12:00:40.012158505 -0400
 @@ -1,4 +1,4 @@
 -SUBDIRS(transformation segmentation registration registration2 rview applications)
 +SUBDIRS(transformation segmentation registration registration2 applications)
  
  IF (BUILD_CARDIAC)
    SUBDIRS(cardiac)
+diff -rupN IRTK/wrapping/cython/scripts/fetalMask_detection.py IRTK.new/wrapping/cython/scripts/fetalMask_detection.py
+--- IRTK/wrapping/cython/scripts/fetalMask_detection.py	2014-07-29 08:26:30.000000000 -0400
++++ IRTK.new/wrapping/cython/scripts/fetalMask_detection.py	2015-07-02 12:01:46.053759947 -0400
+@@ -90,7 +90,7 @@ def convert_input(image_regions):
+     return detections
+ 
+ detections = convert_input(image_regions)
+-print detections
++#print detections
+ (center, u, ofd), inliers = ransac_ellipses( detections,
+                                              ga,
+                                              nb_iterations=1000,
+@@ -162,5 +162,5 @@ neg_mask[max(0,z-d/2):min(img.shape[0],z
+ 
+ mask[neg_mask>0] = 2
+ 
+-print mask, mask.max()
++#print mask, mask.max()
+ irtk.imwrite(output_mask, mask )
+diff -rupN IRTK/wrapping/cython/scripts/fetalMask_segmentation.py IRTK.new/wrapping/cython/scripts/fetalMask_segmentation.py
+--- IRTK/wrapping/cython/scripts/fetalMask_segmentation.py	2014-07-29 08:26:30.000000000 -0400
++++ IRTK.new/wrapping/cython/scripts/fetalMask_segmentation.py	2015-07-02 12:02:33.100051279 -0400
+@@ -245,7 +245,7 @@ def mask_image( file_img, file_mask, ga,
+     #                               proba[z],
+     #                               l=1.0 )
+ 
+-    print "MAX LABEL:", labels.max()
++    #print "MAX LABEL:", labels.max()
+     irtk.imwrite(output_dir + "/bare_"+os.path.basename(file_img), labels )
+     tmp = irtk.zeros( img.get_header(), dtype='uint8' )
+     tmp[z_min:z_max+1,
+diff -rupN IRTK/wrapping/cython/scripts/lib/BundledSIFT.py IRTK.new/wrapping/cython/scripts/lib/BundledSIFT.py
+--- IRTK/wrapping/cython/scripts/lib/BundledSIFT.py	2014-07-29 08:26:30.000000000 -0400
++++ IRTK.new/wrapping/cython/scripts/lib/BundledSIFT.py	2015-07-02 12:03:25.266156664 -0400
+@@ -215,7 +215,7 @@ def detect_mser( raw_file,
+ 
+             if cl == 1:
+                 ellipse_center = [ellipse[0][0],ellipse[0][1],z]
+-                print c.shape
++                #print c.shape
+                 if return_image_regions:
+                     image_regions[-1].append((ellipse_center,c))
+                 else:
+@@ -316,14 +316,14 @@ def ransac_ellipses( detections,
+ 
+     centers = np.array(centers,dtype='float')
+     if model == "sphere":
+-        model = SphereModel(OFD,debug=True)
++        model = SphereModel(OFD,debug=False)
+     else:
+-        model = BoxModel(OFD,debug=True)
++        model = BoxModel(OFD,debug=False)
+         
+     # run RANSAC algorithm
+     ransac_fit, ransac_data = ransac.ransac( centers,model,
+                                              5, nb_iterations, 10.0, 10, # misc. parameters
+-                                             debug=True,return_all=True)
++                                             debug=False,return_all=True)
+ 
+     if ransac_fit is None:
+         print "RANSAC fiting failed"
