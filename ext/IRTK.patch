@@ -1,0 +1,25 @@
+diff -rupN IRTK.orig/config/IRTKInclude.cmake IRTK/config/IRTKInclude.cmake
+--- IRTK.orig/config/IRTKInclude.cmake	2015-07-02 09:56:19.752188756 -0400
++++ IRTK/config/IRTKInclude.cmake	2015-07-02 09:57:45.756245701 -0400
+@@ -52,12 +52,6 @@ ENDIF (ZLIB_FOUND)
+ 
+ INCLUDE(${CMAKE_ROOT}/Modules/FindPNG.cmake)
+ 
+-FIND_PACKAGE(FLTK REQUIRED)
+-
+-IF (FLTK_FOUND)
+-  INCLUDE_DIRECTORIES(${FLTK_INCLUDE_DIR})
+-  LINK_LIBRARIES (${FLTK_LIBRARIES})
+-ENDIF (FLTK_FOUND)
+ 
+ IF (APPLE)
+   FIND_PROGRAM(APPLE_REZ Rez /Developer/Tools)
+diff -rupN IRTK.orig/packages/CMakeLists.txt IRTK/packages/CMakeLists.txt
+--- IRTK.orig/packages/CMakeLists.txt	2015-07-02 09:56:19.608193969 -0400
++++ IRTK/packages/CMakeLists.txt	2015-07-02 09:57:01.062692990 -0400
+@@ -1,4 +1,4 @@
+-SUBDIRS(transformation segmentation registration registration2 rview applications)
++SUBDIRS(transformation segmentation registration registration2 applications)
+ 
+ IF (BUILD_CARDIAC)
+   SUBDIRS(cardiac)

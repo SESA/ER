@@ -1,8 +1,0 @@
-%include "irtkTransformation.i"
-%include "irtkHomogeneousTransformation.i"
-%include "irtkRigidTransformation.i"
-%include "irtkAffineTransformation.i"
-%include "irtkFreeFormTransformation.i"
-%include "irtkFreeFormTransformation3D.i"
-%include "irtkBSplineFreeFormTransformation3D.i"
-%include "irtkMultiLevelFreeFormTransformation.i"

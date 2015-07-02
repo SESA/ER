@@ -15,6 +15,13 @@ ext/Anaconda-2.1.0-Linux-x86_64.sh:
 	make -C ext/IRTK/wrapping/cython/ext
 	touch .masking.BUILT
 
+ext/irtk-6d7d075f69aea616b8cd0d57e07983db6e2f9497.zip: 
+	cd ext && wget http://www.doc.ic.ac.uk/~kpk09/irtk-6d7d075f69aea616b8cd0d57e07983db6e2f9497.zip
+
+ext/IRTK: ext/irtk-6d7d075f69aea616b8cd0d57e07983db6e2f9497.zip
+	cd ext && unzip irtk-6d7d075f69aea616b8cd0d57e07983db6e2f9497.zip && mv irtk.git IRTK
+	cd ext && patch -p0 < IRTK.patch
+
 ext/anaconda: ext/Anaconda-2.1.0-Linux-x86_64.sh
 	cd ext && bash ./Anaconda-2.1.0-Linux-x86_64.sh -b -p $$PWD/anaconda
 	export PATH=$(CURDIR)/ext/anaconda/bin:$$PATH && echo 'y' | conda install opencv && echo 'y' | conda install numpy=1.8
