@@ -25,14 +25,14 @@ function startProcessing(req, res)
     var ts = { id: tranid, path: dir };
     var files = null;
     var urlprefix = reconPrefix(req);
-    
+
     console.log("Dir: ", dir.name);
-    req.files.slice.forEach(function (element, index, array) {
+	
+    req.files.forEach(function (element, index, array) {
 	if (files == null) files = element.path;
 	else files = files + ' ' + element.path;
     });
     ts.files = files;
-    console.log("files: ", files);
 
     ts.data = '';
 

@@ -17,16 +17,23 @@ app.set('view engine', 'jade');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ 
-	dest: './uploads/',
-	rename: function (fieldname, filename) {
-    return filename
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads')
   },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+});
+
+app.use( multer({ 
+  storage: storage,
   putSingleFilesInArray: true,
   onParseEnd: function (req, next) {
     req.next();
   }
-}));
+}).array('slice'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 

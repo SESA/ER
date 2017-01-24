@@ -74,7 +74,7 @@ function doRecon()
     echo "RECON: START: $(date)"
     (
 	cd $dir
-	$RECONCMD -o $tran.nii -i output_segmentation/masked_* --disableBiasCorrection --useAutoTemplate --useSINCPSF --resolution 2.0 --debug 0 --numThreads 32 --useCPU
+	$RECONCMD -o $tran.nii -i data/* --disableBiasCorrection --useAutoTemplate --useSINCPSF --resolution 2.0 --debug 0 --numThreads 32 --useCPU
     )
     echo "RECON: END: $(date)"
     echo "RECON: output $url"
