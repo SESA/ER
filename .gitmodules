@@ -1,14 +1,14 @@
 [submodule "ext/dropzone"]
 	path = ext/dropzone
-	url = git@github.com:enyo/dropzone.git
+	url = https://github.com/enyo/dropzone.git
 [submodule "ext/slicedrop"]
 	path = ext/slicedrop
-	url = git@github.com:slicedrop/slicedrop.github.com.git
+	url = https://github.com/slicedrop/slicedrop.github.com.git
 [submodule "ext/example-motion-correction"]
 	path = ext/example-motion-correction
 	url = git@github.com:SESA/example-motion-correction
 	branch = autoMask
 [submodule "ext/fetalReconstruction"]
 	path = ext/fetalReconstruction
-	url = git@github.com:SESA/fetalReconstruction
+	url = https://github.com/SESA/fetalReconstruction.git
 	branch = cpu
