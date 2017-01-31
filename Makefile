@@ -3,7 +3,7 @@ GIT=git
 
 .PHONY: clean all
 
-all: ext/IRTK ext/anaconda .masking.BUILT .reconstruction.BUILT node_modules
+all: .reconstruction.BUILT node_modules
 
 ext/Anaconda-2.1.0-Linux-x86_64.sh:
 	cd ext && wget http://09c8d0b2229f813c1b93-c95ac804525aac4b6dba79b00b39d1d3.r79.cf1.rackcdn.com/Anaconda-2.1.0-Linux-x86_64.sh
@@ -29,7 +29,7 @@ ext/anaconda: ext/Anaconda-2.1.0-Linux-x86_64.sh
 
 .reconstruction.BUILT:
 	-mkdir ext/fetalReconstruction/source/build
-	cd ext/fetalReconstruction/source/build && cmake -DCMAKE_C_COMPILER=gcc-4.8 -DCMAKE_CXX_COMPILER=g++-4.8 -DBUILD_TESTS=OFF ..
+	cd ext/fetalReconstruction/source/build && cmake ..
 	make -C ext/fetalReconstruction/source/build -j8 
 	touch .reconstruction.BUILT
 
@@ -37,8 +37,10 @@ node_modules:
 	${NPM} install
 
 run: all
-	-mkdir public/recon
-	-mkdir transactions
+	-mkdir -p public/recon
+	-mkdir -p transactions
+	-mkdir -p uploads
+	-ln -sf `which nodejs` /usr/bin/node
 	${NPM} start
 
 reset:

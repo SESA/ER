@@ -6,7 +6,7 @@
 	url = https://github.com/slicedrop/slicedrop.github.com.git
 [submodule "ext/example-motion-correction"]
 	path = ext/example-motion-correction
-	url = git@github.com:SESA/example-motion-correction
+	url = https://github.com/SESA/example-motion-correction.git
 	branch = autoMask
 [submodule "ext/fetalReconstruction"]
 	path = ext/fetalReconstruction
