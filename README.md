@@ -15,10 +15,5 @@
     $> cd ER
     $> git submodule update --init --recursive
     
-## How to build
-    $> cd fetalReconstruction/source/build
-    $> cmake .. 
-    $> make -j
-    
 ## How to run
-    $> nodejs ./bin/www
+    $> make run
