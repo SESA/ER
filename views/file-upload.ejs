@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fetal Reconstruction</title>
+    <!-- CSS imports -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/css/bootstrap-slider.min.css">
+
+    <!-- JS imports -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/bootstrap-slider.js"></script>
+    <style>
+        .content {
+            padding-top: 30px;
+        }
+        .slider-selection {
+            background: #5bc0de;
+        }
+        .slider-horizontal {
+            width: 97% ! important;
+            margin-left: 10px;
+        }
+        .starter-template {
+            padding: 40px 15px;
+        }
+        .starter-template h1, p {
+            text-align: center;
+        }
+        .dropzone {
+            border: 2px dashed #0087F7;
+            border-radius: 5px;
+            min-height: 230px;
+        }
+        .dropzone .dz-message {
+            font-weight: 500; 
+            font-size: 24px;
+            color: #646C7F;
+        }
+    </style>
+    <script>
+      function myParamName(){
+          return "slice";
+      };
+
+      var uploadedFiles;
+
+      Dropzone.options.zone1 = {
+        uploadMultiple: true,
+        parallelUploads: 100,
+        acceptedFiles: '.nii.gz, .nii, .er',
+        paramName: myParamName,
+        init: function () {
+            var trans = null;
+            this.on("queuecomplete", function () {
+                console.log('queuecomplete: trans: ' + trans);
+                if (trans == null) {
+                    console.log("NYI: ERROR HANDLING");
+                } else {
+                    console.log("loading status for transaction: " + trans);
+                    //window.setTimeout(function() { window.location.href = "/status/" + trans; }, 1000);
+                }
+            });
+            this.on("success", function(files, data) {
+                $('#mask-select')
+                .append($("<option></option>")
+                .attr("value", files.name)
+                .text(files.name));
+            });
+        }
+      };
+
+      $(document).ready(function() {
+          $("#slider-backends").bootstrapSlider();
+          $("#slider-threads").bootstrapSlider();
+          $("#slider-iterations").bootstrapSlider();
+      });
+
+      $( "#recon-form" ).submit(function( event ) {
+          alert("Submitting...");
+          event.preventDefault();
+      }); 
+
+    </script>
+  </head>
+  <body>
+    <div class="container">
+        <div class="starter-template">
+            <h1>Fetal Reconstruction</h1>
+            <p class="lead">An elastic EbbRT application</p>
+            <div class="content row">
+                <div class="col-md-4">
+                    <form action="/start-recon" method="post" id="recon-form"> 
+                        <div class="form-group">
+                            <label>Number of Backends</label>
+                            <div>
+                                <input class="form-control" 
+                                id="slider-backends" 
+                                data-slider-id='ex1Slider' 
+                                type="text" 
+                                data-slider-min="1" 
+                                data-slider-max="3" 
+                                data-slider-step="1" 
+                                data-slider-value="1"
+                                name="backends"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Threads</label>
+                            <div>
+                                <input class="form-control" 
+                                id="slider-threads" 
+                                data-slider-id='ex1Slider'
+                                type="text" 
+                                data-slider-min="1" 
+                                data-slider-max="5" 
+                                data-slider-step="1" 
+                                data-slider-value="1"
+                                name="threads"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Iterations</label>
+                            <div>
+                                <input class="form-control" 
+                                id="slider-iterations" 
+                                data-slider-id='ex1Slider' 
+                                type="text" 
+                                data-slider-min="1" 
+                                data-slider-max="9" 
+                                data-slider-step="1" 
+                                data-slider-value="1"
+                                name="iterations"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Select mask</label>
+                            <select id="mask-select" class="form-control" name="mask">
+                                <option>No mask</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type=submit class="btn btn-primary" value="Start reconstruction" />
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-8">
+                    <form id="zone1" action="file-upload" class="dropzone"></form>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

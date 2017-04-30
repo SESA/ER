@@ -13,10 +13,11 @@ var io = require('socket.io')(http);
 app.myIO = io;
 
 // view engine setup
-app.set('view engine', 'jade');
+ app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -54,6 +55,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
+    console.log(err);
     res.render('error', {
       message: err.message,
       error: err

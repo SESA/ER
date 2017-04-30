@@ -15,11 +15,6 @@ function reconPrefix(req){
 
 function startProcessing(req, res)
 {
-    console.log('startProcessing: req: ' + req.get('host') +
-		'host: ' + req.hostname + 
-		' port: ' + req.app.settings.port +
-		' url: ' + req.url);
-
     var dir = tmp.dirSync({ template: './transactions/XXXXXX' });
     var tranid = path.basename(dir.name);
     var ts = { id: tranid, path: dir };
@@ -28,11 +23,13 @@ function startProcessing(req, res)
 
     console.log("Dir: ", dir.name);
 	
-    req.files.forEach(function (element, index, array) {
-	if (files == null) files = element.path;
-	else files = files + ' ' + element.path;
-    });
-    ts.files = files;
+    //req.files.forEach(function (element, index, array) {
+    //    if (files == null) 
+    //        files = element.path;
+    //    else 
+    //        files = files + ' ' + element.path;
+    //});
+    //ts.files = files;
 
     ts.data = '';
 
@@ -57,7 +54,8 @@ function startProcessing(req, res)
     
     transactions[tranid] = ts;
     
-    ts.work = spawn('./recon.sh', [dir.name, urlprefix, files]);
+    //ts.work = spawn('./recon.sh', [dir.name, urlprefix, files]);
+    ts.work = spawn('./test.sh');
 
     ts.work.on('error', function (er) {
 	delete transactions[tranid];
@@ -89,18 +87,12 @@ function startProcessing(req, res)
 	console.log('work closed/exited with code ' + code);
     });
 
-    res.send(tranid);
+	res.render('status', { title: 'Elastic Reconstruction Status', id: tranid, port: req.app.settings.port });
 }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
     	res.render('file-upload', { title: 'Elastic Reconstruction' });
-});
-
-router.get('/users', function(req, res, next) {
-	var view = fs.open('./uploads/10_3T_nody_001.nii.gz' , 'r');
-	console.log(fs.read(view));
-	res.render('index', {view: view});
 });
 
 router.get('/file-upload', function(req, res, next) {
@@ -109,9 +101,8 @@ router.get('/file-upload', function(req, res, next) {
 
 router.post('/file-upload', function(req, res, next) {
     console.log(req.files);
-    startProcessing(req, res);
+    res.send();
 });
-
 
 router.get(/status/, function(req, res, next) {
     var tranid = path.basename(url.parse(req.url).pathname);
@@ -123,5 +114,9 @@ router.get(/status/, function(req, res, next) {
 	res.end();
     }
 });
+
+router.post('/start-recon', function(req, res, next) {
+    startProcessing(req, res);
+})
 	   
 module.exports = router;

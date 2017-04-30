@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fetal Reconstruction</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <style>
+            #messages {
+                list-style-type: none; 
+                margin: 0; 
+                padding: 0; 
+            }
+            #messages li {
+                padding: 5px 10px; 
+            }
+            #messages li:nth-child(odd) { 
+                background: #eee; 
+            }
+            .starter-template {
+                padding: 40px 15px;
+            }
+            .starter-template h1, p {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="starter-template">
+                <h1>Fetal Reconstruction</h1>
+                <p class="lead"><%=title%> for transaction <%=id%></p>
+                <ul id="messages"></ul>
+                <script src="/socket.io/socket.io.js"></script>
+                <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+                <script>
+                    var socket = io(':<%=port%>/<%=id%>');
+                    socket.on('log', function(msg){
+                        $('#messages').append($('<li>').text(msg));
+                    });
+                    socket.on('ctl', function(msg){
+                        $('#messages').append($('<li>').text('DONE: redirecting...'));
+                        window.setTimeout(function() { window.location.href = msg; }, 1000);
+                    });
+                </script>
+            </div>
+        </div>
+    </body>
+</html>
