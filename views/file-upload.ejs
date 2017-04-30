@@ -68,6 +68,7 @@
                 .append($("<option></option>")
                 .attr("value", files.name)
                 .text(files.name));
+                $("#form-btn").prop("disabled",false)
             });
         }
       };
@@ -145,7 +146,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type=submit class="btn btn-primary" value="Start reconstruction" />
+                            <input type=submit class="btn btn-primary"
+                            value="Start reconstruction" disabled id="form-btn"/>
                         </div>
                     </form>
                 </div>
