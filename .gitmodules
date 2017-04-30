@@ -5,6 +5,6 @@
 	path = ext/example-motion-correction
 	url = https://github.com/SESA/example-motion-correction.git
 	branch = autoMask
-[submodule "ext/fetalReconstruction"]
-	path = ext/fetalReconstruction
+[submodule "ext/EbbRT-fetalRecon"]
+	path = ext/EbbRT-fetalRecon
 	url = https://github.com/jas91/EbbRT-fetalRecon.git
