@@ -23,14 +23,6 @@ function startProcessing(req, res)
 
     console.log("Dir: ", dir.name);
 	
-    //req.files.forEach(function (element, index, array) {
-    //    if (files == null) 
-    //        files = element.path;
-    //    else 
-    //        files = files + ' ' + element.path;
-    //});
-    //ts.files = files;
-
     ts.data = '';
 
     ts.ioNSP = req.app.myIO.of('/' + tranid);
@@ -53,9 +45,12 @@ function startProcessing(req, res)
     });
     
     transactions[tranid] = ts;
-    
-    //ts.work = spawn('./recon.sh', [dir.name, urlprefix, files]);
-    ts.work = spawn('./test.sh');
+    params = req.body;
+    if (params.mask == "No mask") {
+      ts.work = spawn('./ebbrt_recon.sh',[tranid, params.threads, params.iterations, params.backends]);
+    } else {
+      ts.work = spawn('./ebbrt_recon.sh',[tranid, params.threads, params.iterations, params.backends, params.mask]);
+    }
 
     ts.work.on('error', function (er) {
 	delete transactions[tranid];
