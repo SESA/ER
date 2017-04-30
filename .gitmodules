@@ -7,4 +7,4 @@
 	branch = autoMask
 [submodule "ext/fetalReconstruction"]
 	path = ext/fetalReconstruction
-	url = https://github.com/jas91/EbbRT-fetalRecon
+	url = https://github.com/jas91/EbbRT-fetalRecon.git
