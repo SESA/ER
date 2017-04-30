@@ -1,6 +1,3 @@
-[submodule "ext/dropzone"]
-	path = ext/dropzone
-	url = https://github.com/enyo/dropzone.git
 [submodule "ext/slicedrop"]
 	path = ext/slicedrop
 	url = https://github.com/slicedrop/slicedrop.github.com.git
@@ -10,5 +7,4 @@
 	branch = autoMask
 [submodule "ext/fetalReconstruction"]
 	path = ext/fetalReconstruction
-	url = https://github.com/SESA/fetalReconstruction.git
-	branch = cpu
+	url = https://github.com/jas91/EbbRT-fetalRecon

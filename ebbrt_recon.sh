@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export RECON_DIR=~/EbbRT-fetalRecon
+export RECON_DIR=${PWD}/ext/fetalReconstruction
 export RECONCMD=${RECON_DIR}/build/reconstruction
 
 tranid=$1
