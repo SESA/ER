@@ -11,9 +11,9 @@
 - libboost
 
 ## Clone repo and install submodules
-    $> git clone https://github.com/SESA/ER.git
-    $> cd ER
-    $> git submodule update --init --recursive
+    $ git clone https://github.com/SESA/ER.git
+    $ cd ER
+    $ git submodule update --init --recursive
     
-## How to run
-    $> make run
+## How to build and run
+    $ make build && make run
